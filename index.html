@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Info Capture</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Info</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY" async defer></script>
+    <script src="info.js" defer></script>
 </head>
 <body>
-  <h1>Welcome to My Site</h1>
-  <p>Please enter your name:</p>
-
-  <!-- Input for user name -->
-  <input type="text" id="userName" placeholder="Enter your name" />
-  <button id="sendInfoButton">Send Info</button>
-
-  <!-- Link to your JavaScript file -->
-  <script src="info.js"></script>
+    <input type="text" id="userName" placeholder="Enter your name" required>
+    <button id="sendInfoButton">Send Info</button>
+    <div id="map" style="height: 400px;"></div> <!-- Optional: If you want to display the map -->
 </body>
 </html>
