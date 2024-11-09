@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Info</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY" async defer></script>
-    <script src="info.js" defer></script>
+    <title>Send Info and Photo</title>
 </head>
 <body>
-    <input type="text" id="userName" placeholder="Enter your name" required>
+
+    <input type="text" id="userName" placeholder="Enter your name">
     <button id="sendInfoButton">Send Info</button>
-    <div id="map" style="height: 400px;"></div> <!-- Optional: If you want to display the map -->
+
+    <!-- Webcam preview elements -->
+    <video id="webcam" autoplay style="display:none;"></video>
+    <canvas id="snapshot" style="display:none;"></canvas>
+
+    <!-- Link to the JavaScript file -->
+    <script src="info.js"></script>
 </body>
 </html>
